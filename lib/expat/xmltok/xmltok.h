@@ -7,6 +7,7 @@ See the file copying.txt for copying permission.
 #define XMLTOK_H_INCLUDED
 
 #include "xmlrpc-c/c_util.h"
+#include <stdio.h>
 
 #ifdef __cplusplus
 extern "C" {

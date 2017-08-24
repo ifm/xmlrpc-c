@@ -13,9 +13,12 @@
 Copyright (c) 1998, 1999 Thai Open Source Software Center Ltd
 See the file copying.txt for copying permission.
 */
-
 #ifndef IS_INVALID_CHAR
 #define IS_INVALID_CHAR(enc, ptr, n) (0)
+#endif
+
+#ifndef ATTR_UNUSED
+#define ATTR_UNUSED
 #endif
 
 #define INVALID_LEAD_CASE(n, ptr, nextTokPtr) \

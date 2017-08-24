@@ -13,7 +13,11 @@ add_library(xmlrpc++ SHARED
   xml.cpp
   Lock.cpp
   )
+ if(WIN32)
+target_link_libraries(xmlrpc++ xmlrpc)
+else(WIN32)
 target_link_libraries(xmlrpc++ xmlrpc pthread)
+endif(WIN32)
 list(APPEND lib_TARGETS xmlrpc++)
 ensc_pkgconfig(xmlrpc++)
 

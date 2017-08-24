@@ -18,9 +18,9 @@
 #include <cassert>
 #include <stdexcept>
 #include <iostream>
-#include <unistd.h>
 #include <stdio.h>
 #ifndef _WIN32
+#include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #endif

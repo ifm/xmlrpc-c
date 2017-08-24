@@ -10,10 +10,12 @@ if(COMMAND cmake_policy)
   cmake_policy(SET CMP0003 NEW)
 endif()
 
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 
 set(XMLRPC_C_VERSION_MAJOR "1"  CACHE STRING "Version (major) of xmlrpc-c")
-set(XMLRPC_C_VERSION_MINOR "31" CACHE STRING "Version (minor) of xmlrpc-c")
-set(XMLRPC_C_VERSION_POINT "0"  CACHE STRING "Version (point) of xmlrpc-c")
+set(XMLRPC_C_VERSION_MINOR "33" CACHE STRING "Version (minor) of xmlrpc-c")
+set(XMLRPC_C_VERSION_POINT "14"  CACHE STRING "Version (point) of xmlrpc-c")
 
 set(XMLRPC_C_VERSION
   "${XMLRPC_C_VERSION_MAJOR}.${XMLRPC_C_VERSION_MINOR}.${XMLRPC_C_VERSION_POINT}"
@@ -65,32 +67,17 @@ endmacro(ensc_set_link_exe_flags)
 
 ###########
 if(WIN32)
-  find_program(WININET_CONFIG_EXECUTABLE wininet-config)
-
+  set(MUST_BUILD_CURL_CLIENT     1 CACHE BOOL "Set if Curl client transport shall be built")
+  set(MUST_BUILD_WININET_CLIENT  0 CACHE BOOL "Set if WinInet client transport shall be built")
+  set(MUST_BUILD_LIBWWW_CLIENT   0 CACHE BOOL "Set if libwww client transport shall be built")
   if(DEFINED MUST_BUILD_WININET_CLIENT)
-    set(tmp ${MUST_BUILD_WININET_CLIENT})
-  else(DEFINED MUST_BUILD_WININET_CLIENT)
-    if(WININET_CONFIG_EXECUTABLE)
-      set(tmp 1)
-    else(WININET_CONFIG_EXECUTABLE)
-      set(tmp 0)
-    endif(WININET_CONFIG_EXECUTABLE)
+    ensc_set_bool(MUST_BUILD_WININET_CLIENT 1 "Set if WinInet client transport shall be built")
+    set(MUST_BUILD_CLIENT 1)
   endif(DEFINED MUST_BUILD_WININET_CLIENT)
-
   set(MSVCRT yes)
-else(WIN32)
-  set(tmp 0)
 endif(WIN32)
 
-if(tmp)
-  set(MUST_BUILD_CLIENT 1)
-  exec_program(${WININET_CONFIG_EXECUTABLE} ARGS --version OUTPUT_VARIABLE WININET_VERSION)
-  exec_program(${WININET_CONFIG_EXECUTABLE} ARGS --cflags  OUTPUT_VARIABLE WININET_CFLAGS)
-  exec_program(${WININET_CONFIG_EXECUTABLE} ARGS --libs    OUTPUT_VARIABLE WININET_LDADD)
-  message(STATUS "Using WinInet ${WININET_VERSION} transport")
-endif(tmp)
 
-ensc_set_bool(MUST_BUILD_WININET_CLIENT ${tmp} "Set iff WinInet client transport shall be built")
 set(wininet_srcdir ${xmlrpc-c_SOURCE_DIR}/lib/wininet_transport)
 
 ###########
@@ -100,9 +87,9 @@ else(DEFINED MUST_BUILD_CURL_CLIENT)
   set(tmp)
 endif(DEFINED MUST_BUILD_CURL_CLIENT)
 
-pkg_check_modules(CURL ${tmp} libcurl)
+find_package(CURL ${tmp})
 
-ensc_set_bool(MUST_BUILD_CURL_CLIENT ${CURL_FOUND} "Set iff Curl client transport shall be built")
+ensc_set_bool(MUST_BUILD_CURL_CLIENT ${CURL_FOUND} "Set if Curl client transport shall be built")
 set(curl_srcdir ${xmlrpc-c_SOURCE_DIR}/lib/curl_transport)
 
 if(MUST_BUILD_CURL_CLIENT)
@@ -133,11 +120,13 @@ set(libwww_srcdir ${xmlrpc-c_SOURCE_DIR}/lib/libwww_transport)
 
 ############
 
-set(ENABLE_CGI_SERVER      1 CACHE BOOL "Set iff CGI server shall be enabled")
-set(ENABLE_CPLUSPLUS       1 CACHE BOOL "Set iff C++ part shall be enabled")
-set(ENABLE_ABYSS_SERVER    1 CACHE BOOL "Set iff Abyss server shall be enabled")
-set(ENABLE_LIBXML2_BACKEND 1 CACHE BOOL "Set iff libxml2 backend shall be used")
-set(ENABLE_ABYSS_SERVER    1 CACHE BOOL "Set iff abyss server shall be enabled")
+set(ENABLE_CGI_SERVER      0 CACHE BOOL "Set if CGI server shall be enabled")
+set(ENABLE_PSTREAM_SERVER  0 CACHE BOOL "Set if PSTREAM server shall be enabled")
+set(ENABLE_EXAMPLES        0 CACHE BOOL "Set if Examples shall be enabled")
+set(ENABLE_CPLUSPLUS       1 CACHE BOOL "Set if C++ part shall be enabled")
+set(ENABLE_ABYSS_SERVER    0 CACHE BOOL "Set if Abyss server shall be enabled")
+set(ENABLE_LIBXML2_BACKEND 0 CACHE BOOL "Set if libxml2 backend shall be used")
+set(ENABLE_ABYSS_SERVER    0 CACHE BOOL "Set if abyss server shall be enabled")
 set(ENABLE_ABYSS_THREADS   1 CACHE BOOL "Use pthread")
 
 if(ENABLE_LIBXML2_BACKEND)
@@ -177,11 +166,20 @@ set(HAVE_WCHAR_H_DEFINE ${HAVE_WCHAR_H})
 
 
 #######
-set(LINKER_AS_NEEDED  1 CACHE BOOL "Use the --as-needed linker option")
+
+if(WIN32)
+	set(LINKER_AS_NEEDED  0 CACHE BOOL "Use the --as-needed linker option")
+else(WIN32)
+	set(LINKER_AS_NEEDED  1 CACHE BOOL "Use the --as-needed linker option")
+endif(WIN32)
+
 if(LINKER_AS_NEEDED)
   set(XMLRPC_LINKER_FLAGS "-Wl,--as-needed")
 endif(LINKER_AS_NEEDED)
 
+if(WIN32)
+	set(XMLRPC_LINKER_FLAGS "${XMLRPC_LINKER_FLAGS} ws2_32.lib")
+endif(WIN32)
 
 try_compile(HAVE_ATTR_UNUSED
   ${CMAKE_BINARY_DIR}/
@@ -206,7 +204,7 @@ if(HAVE_ATTR_UNUSED)
 endif(HAVE_ATTR_UNUSED)
 
 if(WIN32)
-  set(DIRECTORY_SEPARATOR "\\")
+  set(DIRECTORY_SEPARATOR "\\\\")
   set(THREAD_LIBS "")
 else(WIN32)
   set(DIRECTORY_SEPARATOR "/")
@@ -281,7 +279,11 @@ enable_testing()
 
 #add_subdirectory(test)
 add_subdirectory(lib)
-add_subdirectory(examples)
+
+if(ENABLE_EXAMPLES)
+	add_subdirectory(examples)
+endif(ENABLE_EXAMPLES)
+
 add_subdirectory(include)
 add_subdirectory(src)
 

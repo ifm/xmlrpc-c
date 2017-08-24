@@ -84,9 +84,10 @@
   #define HAVE_WINDOWS_THREAD 1
 #else
   #define HAVE_WINDOWS_THREAD 0
+  #define HAVE_PTHREAD 1
 #endif
 
-#define HAVE_PTHREAD 1
+
 
 /* Note that the return value of XMLRPC_VSNPRINTF is int on Windows,
    ssize_t on POSIX.
@@ -150,7 +151,6 @@
 #endif
 
 #if MSVCRT
-  #define snprintf _snprintf
   #define popen _popen
 #endif
 

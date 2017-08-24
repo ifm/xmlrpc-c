@@ -14,7 +14,7 @@ endif(ENABLE_LIBXML2_BACKEND)
 
 if(MUST_BUILD_WININET_CLIENT)
   set(client_wininet_CFLAGS "")
-  set(client_wininet_LIBS   "${WININET_LDADD}" pthread)
+  set(client_wininet_LIBS  wininet util)
   list(APPEND transport_SOURCES
     ${wininet_srcdir}/xmlrpc_wininet_transport.c ${wininet_srcdir}/xmlrpc_wininet_transport.h)
 endif(MUST_BUILD_WININET_CLIENT)
@@ -26,8 +26,9 @@ if(MUST_BUILD_LIBWWW_CLIENT)
 endif(MUST_BUILD_LIBWWW_CLIENT)
 
 if(MUST_BUILD_CURL_CLIENT)
-  set(client_curl_CFLAGS ${CURL_CFLAGS})
-  set(client_curl_LIBS   ${CURL_LDFLAGS} pthread)
+  FIND_PACKAGE(CURL REQUIRED)
+  include_directories(${CURL_INCLUDE_DIR})
+  set(client_curl_LIBS ${CURL_LIBRARY})
   set(xmlrpc_client_pkgconfig_req libcurl)
   list(APPEND transport_SOURCES
     ${curl_srcdir}/xmlrpc_curl_transport.c
@@ -35,15 +36,13 @@ if(MUST_BUILD_CURL_CLIENT)
     ${curl_srcdir}/curltransaction.h
     ${curl_srcdir}/curlmulti.c
     ${curl_srcdir}/curlmulti.h
-    ${curl_srcdir}/lock.h
-    ${curl_srcdir}/lock_pthread.c
-    ${curl_srcdir}/lock_pthread.h
     ${curl_srcdir}/curlversion.h
     )
 endif(MUST_BUILD_CURL_CLIENT)
 
-set(client_CFLAGS "-I${wininet_srcdir} -I${libwww_srcdir} -I${curl_srcdir} ${client_wininet_CFLAGS} ${client_libwww_CFLAGS} ${client_curl_CFLAGS}")
+set(client_CFLAGS "-I${wininet_srcdir} -I${libwww_srcdir} -I${curl_srcdir} ${client_wininet_CFLAGS} ${client_libwww_CFLAGS}")
 set(client_LIBS   ${client_wininet_LIBS} ${client_libwww_LIBS} ${client_curl_LIBS})
+
 
 
 add_subdirectory(cpp)
@@ -60,9 +59,7 @@ add_library(xmlrpc SHARED
   xmlrpc_build.c xmlrpc_decompose.c xmlrpc_parse.c xmlrpc_serialize.c
   xmlrpc_authcookie.c)
 
-set_target_properties(xmlrpc
-  PROPERTIES
-  COMPILE_FLAGS ${libxml_INCLUDES})
+set_target_properties(xmlrpc PROPERTIES COMPILE_FLAGS ${libxml_INCLUDES})
 
 ensc_pkgconfig(xmlrpc)
 target_link_libraries(xmlrpc ${libxml_LIBS} xmlrpc_util)
@@ -70,7 +67,8 @@ list(APPEND lib_TARGETS xmlrpc)
 
 ### libxmlrpc_client.so
 add_library(xmlrpc_client SHARED
-  xmlrpc_client.c xmlrpc_client_global.c xmlrpc_server_info.c ${transport_SOURCES})
+  xmlrpc_client.c xmlrpc_client_global.c xmlrpc_server_info.c ${transport_SOURCES}
+  ${xmlrpc-c_SOURCE_DIR}/include/xmlrpc-c/client.h)
 
 target_link_libraries(xmlrpc_client xmlrpc ${client_LIBS})
 set_target_properties(xmlrpc_client
@@ -78,6 +76,8 @@ set_target_properties(xmlrpc_client
   COMPILE_FLAGS "${client_CFLAGS}")
 list(APPEND lib_TARGETS xmlrpc_client)
 ensc_pkgconfig(xmlrpc_client)
+
+set_target_properties(xmlrpc_util PROPERTIES DEFINE_SYMBOL XMLRPC_CLIENT_EXPORTED __declspec(dllexport))
 
 ### libxmlrpc_server.so
 add_library(xmlrpc_server SHARED

@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <bitset>
+#include <algorithm>
 
 #include "xmlrpc-c/girerr.hpp"
 using girerr::error;
@@ -175,7 +176,7 @@ base64FromBytes(vector<unsigned char> const& bytes,
              chunkStart += base64MaxChunkSize) {
 
             size_t const chunkSize(
-                min(base64MaxChunkSize, bytes.size() - chunkStart));
+                std::min(base64MaxChunkSize, bytes.size() - chunkStart));
     
             encodeChunk(bytes, chunkStart, chunkSize, &retval);
 

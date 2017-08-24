@@ -19,6 +19,10 @@ if(WIN32)
     set ( SOURCE_FILES
         ${SOURCE_FILES}
         lock_windows.c
+		${xmlrpc-c_SOURCE_DIR}/include/xmlrpc-c/util.h
+		${xmlrpc-c_SOURCE_DIR}/include/xmlrpc-c/lock.h
+		${xmlrpc-c_SOURCE_DIR}/include/xmlrpc-c/lock_none.h
+		${xmlrpc-c_SOURCE_DIR}/include/xmlrpc-c/lock_platform.h
         )
 else(WIN32)
     set( SOURCE_FILES
@@ -31,6 +35,9 @@ add_library(xmlrpc_util SHARED
         ${SOURCE_FILES}
   )
 
+set_target_properties(xmlrpc_util PROPERTIES DEFINE_SYMBOL XMLRPC_BUILDING_UTIL)
+set_target_properties(xmlrpc_util PROPERTIES DEFINE_SYMBOL XMLRPC_DLLEXPORT __declspec(dllexport))  
+  
 set_target_properties(xmlrpc_util
   PROPERTIES
   LINK_FLAGS ${XMLRPC_LINKER_FLAGS}

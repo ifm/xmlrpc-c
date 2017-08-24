@@ -57,10 +57,23 @@ See the file doc/INSTALL.
 
 In the simplest case, it's just a conventional
 
-  $ ./configure
-  $ make
-  $ make install
 
+## Linking against Curl on windows
+
+At the moment the ``FindCurl.cmake`` is not capable to find the ``libcurl`` correctly on windows. To achieve this the recommended way is to create a folder ``%PROGRAMFILES%\CURL`` and copy the curl build artifacts to this location. The result should look like this:
+
+```
+
+   |
+   +-- bin
+   |
+   +-- include
+   |
+   +-- lib
+```
+After this CMake needs to be instrumented to search this location for headers and libraries. This is done by defining ``CMAKE_PREFIX_PATH=%PROGRAMFILES%\CURL``
+
+:warning: If you want to use the static version of the Curl library you have to pass ``-DCURL_STATICLIB`` to the compile otherwise some symbols are missing during linking. Check this [StackOverflow](https://stackoverflow.com/a/12912088/695442) for reference.
 
 # ADDITIONAL INFORMATION
 

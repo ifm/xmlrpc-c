@@ -18,7 +18,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <string.h>
-#include <unistd.h>
+//#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -684,7 +684,7 @@ integerTokenValue(xmlrpc_env * const envP,
                   Tokenizer *  const tokP) {
 
     xmlrpc_env env;
-    char valueString[tokP->size + 1];
+    char* valueString = malloc(tokP->size + 1);
     xmlrpc_int64 value;
     xmlrpc_value * valP;
 
@@ -702,7 +702,7 @@ integerTokenValue(xmlrpc_env * const envP,
         valP = xmlrpc_i8_new(envP, value);
     
     xmlrpc_env_clean(&env);
-
+	free(valueString);
     return valP;
 }
 

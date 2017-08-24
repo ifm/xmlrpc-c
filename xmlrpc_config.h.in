@@ -96,7 +96,7 @@
 /* Used to mark an unused function parameter */
 #define ATTR_UNUSED @ATTR_UNUSED@
 
-#define DIRECTORY_SEPARATOR "@DIRECTORY_SEPARATOR@"
+#define DIRECTORY_SEPARATOR '@DIRECTORY_SEPARATOR@'
 
 #define HAVE_UNICODE_WCHAR HAVE_WCHAR_H
 
@@ -218,7 +218,6 @@
 #endif
 
 #if MSVCRT
-  #define snprintf _snprintf
   #define popen _popen
 #endif
 

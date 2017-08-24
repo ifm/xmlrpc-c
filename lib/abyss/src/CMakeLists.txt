@@ -33,11 +33,13 @@ set(xmlrpc_abyss_SOURCES
   trace.c
   trace.h)
 
-add_definitions(-D_UNIX)
+
 
 if(WIN32)
-  list(APPEND xmlrpc_abyss_SOURCES thread_windows.c)
+  add_definitions(-D_WIN32)
+  list(APPEND xmlrpc_abyss_SOURCES thread_windows.c socket_win.c)
 else(WIN32)
+  add_definitions(-D_UNIX)
   list(APPEND xmlrpc_abyss_SOURCES socket_unix.c socket_unix.h)
 
   if(ENABLE_ABYSS_THREADS)
