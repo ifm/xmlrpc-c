@@ -71,7 +71,11 @@ add_library(xmlrpc_client SHARED
   xmlrpc_client.c xmlrpc_client_global.c xmlrpc_server_info.c ${transport_SOURCES}
   ${xmlrpc-c_SOURCE_DIR}/include/xmlrpc-c/client.h)
 
-target_link_libraries(xmlrpc_client xmlrpc ${client_LIBS})
+if(WIN32)
+    target_link_libraries(xmlrpc_client xmlrpc ${client_LIBS} wldap32)
+else(WIN32)
+    target_link_libraries(xmlrpc_client xmlrpc ${client_LIBS})
+endif(WIN32)
 set_target_properties(xmlrpc_client
   PROPERTIES
   COMPILE_FLAGS "${client_CFLAGS}")
