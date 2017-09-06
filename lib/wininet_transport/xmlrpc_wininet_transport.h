@@ -9,6 +9,9 @@ extern "C" {
 
 extern struct xmlrpc_client_transport_ops xmlrpc_wininet_transport_ops;
 
+xmlrpc_client_transport_ops* get_wininet_ops(void);
+
+
 #ifdef __cplusplus
 }
 #endif

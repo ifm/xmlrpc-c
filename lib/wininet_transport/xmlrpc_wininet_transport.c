@@ -954,6 +954,11 @@ struct xmlrpc_client_transport_ops xmlrpc_wininet_transport_ops = {
     NULL,
 };
 
+xmlrpc_client_transport_ops* get_wininet_ops(void)
+{
+	return &xmlrpc_wininet_transport_ops;
+}
+
 
 
 /* Copyright (C) 2001 by First Peer, Inc. All rights reserved.

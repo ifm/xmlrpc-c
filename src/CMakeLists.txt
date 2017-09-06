@@ -37,6 +37,7 @@ if(MUST_BUILD_CURL_CLIENT)
     ${curl_srcdir}/curlmulti.c
     ${curl_srcdir}/curlmulti.h
     ${curl_srcdir}/curlversion.h
+	${curl_srcdir}/xmlrpc_curl_transport.h
     )
 endif(MUST_BUILD_CURL_CLIENT)
 

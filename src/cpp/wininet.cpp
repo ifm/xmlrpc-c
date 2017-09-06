@@ -23,6 +23,7 @@ using girmem::autoObject;
 
 /* transport_config.h defines MUST_BUILD_WININET_CLIENT */
 #include "transport_config.h"
+#include "xmlrpc_wininet_transport.h"
 
 #include "xmlrpc-c/client_transport.hpp"
 
@@ -48,7 +49,8 @@ globalConstant::globalConstant() {
     xmlrpc_transport_setup setupFn;
 
 #if MUST_BUILD_WININET_CLIENT
-    setupFn = xmlrpc_wininet_transport_ops.setup_global_const;
+	xmlrpc_client_transport_ops* wininet_ops = get_wininet_ops();
+    setupFn = wininet_ops->setup_global_const;
 #else
     setupFn = NULL;
 #endif
@@ -72,7 +74,8 @@ globalConstant::~globalConstant() {
     xmlrpc_transport_teardown teardownFn;
 
 #if MUST_BUILD_WININET_CLIENT
-    teardownFn = xmlrpc_wininet_transport_ops.teardown_global_const;
+	xmlrpc_client_transport_ops* wininet_ops = get_wininet_ops();
+    teardownFn = wininet_ops->teardown_global_const;
 #else
     teardownFn = NULL;
 #endif
@@ -133,11 +136,11 @@ clientXmlTransport_wininet::clientXmlTransport_wininet(
 
     transportParms.allowInvalidSSLCerts = allowInvalidSslCerts;
 
-    this->c_transportOpsP = &xmlrpc_wininet_transport_ops;
+    this->c_transportOpsP = get_wininet_ops();
 
     env_wrap env;
 
-    xmlrpc_wininet_transport_ops.create(
+	this->c_transportOpsP->create(
         &env.env_c, 0, "", "",
         &transportParms, XMLRPC_WXPSIZE(allowInvalidSSLCerts),
         &this->c_transportP);

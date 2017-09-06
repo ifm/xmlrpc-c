@@ -28,14 +28,14 @@ using girmem::autoObject;
 
 /* transport_config.h defines MUST_BUILD_CURL_CLIENT */
 #include "transport_config.h"
-
+#include "xmlrpc_curl_transport.h"
 #include "xmlrpc-c/client_transport.hpp"
 
 
 using namespace std;
 using namespace xmlrpc_c;
 
-
+extern struct xmlrpc_client_transport_ops xmlrpc_curl_transport_ops;
 
 namespace {
 
@@ -54,7 +54,8 @@ globalConstant::globalConstant() {
     xmlrpc_transport_setup setupFn;
 
 #if MUST_BUILD_CURL_CLIENT
-    setupFn = xmlrpc_curl_transport_ops.setup_global_const;
+	xmlrpc_client_transport_ops* curl_ops = get_curl_ops();
+    setupFn = curl_ops->setup_global_const;
 #else
     setupFn = NULL;
 #endif
@@ -78,7 +79,8 @@ globalConstant::~globalConstant() {
     xmlrpc_transport_teardown teardownFn;
 
 #if MUST_BUILD_CURL_CLIENT
-    teardownFn = xmlrpc_curl_transport_ops.teardown_global_const;
+	xmlrpc_client_transport_ops* curl_ops = get_curl_ops();
+    teardownFn = curl_ops->teardown_global_const;
 #else
     teardownFn = NULL;
 #endif
@@ -346,11 +348,11 @@ clientXmlTransport_curl::initialize(constrOpt const& optExt) {
     transportParms.gssapi_delegation = opt.present.gssapi_delegation ?
         opt.value.gssapi_delegation         : false;
 
-    this->c_transportOpsP = &xmlrpc_curl_transport_ops;
+	this->c_transportOpsP = get_curl_ops();
 
     env_wrap env;
 
-    xmlrpc_curl_transport_ops.create(
+	this->c_transportOpsP->create(
         &env.env_c, 0, "", "",
         &transportParms, XMLRPC_CXPSIZE(gssapi_delegation),
         &this->c_transportP);

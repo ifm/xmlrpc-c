@@ -1614,3 +1614,6 @@ struct xmlrpc_client_transport_ops xmlrpc_curl_transport_ops = {
     &finishAsynch,
     &setInterrupt,
 };
+xmlrpc_client_transport_ops* get_curl_ops(void) {
+	return &xmlrpc_curl_transport_ops;
+}
