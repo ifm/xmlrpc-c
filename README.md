@@ -17,7 +17,6 @@ See the Xmlrpc-c website at:
   http://xmlrpc-c.sourceforge.net/
 
 
-
 # PREREQUISITES
 
 To build a useful Xmlrpc-c client library, you'll need to have at
@@ -48,15 +47,12 @@ reason to do that, though.
 
 ## Building Curl under windows
 
-The recommended way is to use the DLL instead of the static library
+The recommended way is to use the DLL instead of the static library. Please carefully read the [Curl](https://github.com/curl/curl) documentation especially ``winbuild/BUILD.WINDOWS.txt``
+In case you are using a git based build run ``buildconf.bat`` from the Curl root folder first. The recommended shell for ``nmake`` is the *Visual Studio command prompt Shell*
+
 ```
 nmake /f Makefile.vc mode=dll
 ```
-
-See the file doc/INSTALL.
-
-In the simplest case, it's just a conventional
-
 
 ## Linking against Curl on windows
 
@@ -71,7 +67,7 @@ At the moment the ``FindCurl.cmake`` is not capable to find the ``libcurl`` corr
    |
    +-- lib
 ```
-After this CMake needs to be instrumented to search this location for headers and libraries. This is done by defining ``CMAKE_PREFIX_PATH=%PROGRAMFILES%\CURL``
+After this CMake needs to be instrumented to search this location for headers and libraries. This is done by defining ``CMAKE_PREFIX_PATH=%PROGRAMFILES%\CURL``. For the CMake GUI on Windows you have to use the expanded PATH.
 
 :warning: If you want to use the static version of the Curl library you have to pass ``-DCURL_STATICLIB`` to the compile otherwise some symbols are missing during linking. Check this [StackOverflow](https://stackoverflow.com/a/12912088/695442) for reference.
 
