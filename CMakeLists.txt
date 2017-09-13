@@ -87,14 +87,17 @@ else(DEFINED MUST_BUILD_CURL_CLIENT)
   set(tmp)
 endif(DEFINED MUST_BUILD_CURL_CLIENT)
 
-find_package(CURL ${tmp})
+if(NOT WIN32)
+    find_package(CURL ${tmp})
+endif(NOT WIN32)
 
-ensc_set_bool(MUST_BUILD_CURL_CLIENT ${CURL_FOUND} "Set if Curl client transport shall be built")
 set(curl_srcdir ${xmlrpc-c_SOURCE_DIR}/lib/curl_transport)
 
 if(MUST_BUILD_CURL_CLIENT)
   set(MUST_BUILD_CLIENT 1)
 endif(MUST_BUILD_CURL_CLIENT)
+
+ensc_set_bool(MUST_BUILD_CURL_CLIENT MUST_BUILD_CLIENT "Set if Curl client transport shall be built")
 
 ###########
 find_program(LIBWWW_CONFIG_EXECUTABLE libwww-config)

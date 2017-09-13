@@ -1,7 +1,11 @@
 #ifndef XMLRPC_BASE_HPP_INCLUDED
 #define XMLRPC_BASE_HPP_INCLUDED
 
+#if defined(WIN32)
+#include <win32_config.h>
+#else
 #include <xmlrpc-c/config.h>
+#endif
 
 #include <climits>
 #include <cfloat>

@@ -20,7 +20,11 @@
 #include <sys/types.h>
 #include <stdarg.h>
 
+#ifdef WIN32
+# include <win32_config.h>
+#else
 #include <xmlrpc-c/config.h>  /* Defines XMLRPC_HAVE_WCHAR */
+#endif
 #include <xmlrpc-c/c_util.h>  /* for XMLRPC_PRINTF_ATTR */
 
 #if XMLRPC_HAVE_WCHAR

@@ -26,8 +26,10 @@ if(MUST_BUILD_LIBWWW_CLIENT)
 endif(MUST_BUILD_LIBWWW_CLIENT)
 
 if(MUST_BUILD_CURL_CLIENT)
-  FIND_PACKAGE(CURL REQUIRED)
-  include_directories(${CURL_INCLUDE_DIR})
+  if(NOT WIN32)
+    FIND_PACKAGE(CURL REQUIRED)
+    include_directories(${CURL_INCLUDE_DIR})
+  endif(NOT WIN32)
   set(client_curl_LIBS ${CURL_LIBRARY})
   set(xmlrpc_client_pkgconfig_req libcurl)
   list(APPEND transport_SOURCES
@@ -72,7 +74,7 @@ add_library(xmlrpc_client SHARED
   ${xmlrpc-c_SOURCE_DIR}/include/xmlrpc-c/client.h)
 
 if(WIN32)
-    target_link_libraries(xmlrpc_client xmlrpc ${client_LIBS} wldap32)
+    target_link_libraries(xmlrpc_client xmlrpc ${client_LIBS} wldap32 libcurl)
 else(WIN32)
     target_link_libraries(xmlrpc_client xmlrpc ${client_LIBS})
 endif(WIN32)

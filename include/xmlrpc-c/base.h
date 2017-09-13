@@ -8,7 +8,12 @@
 #include <time.h>
 #include <xmlrpc-c/c_util.h>
 #include <xmlrpc-c/util.h>
-#include <xmlrpc-c/config.h>
+
+#ifdef WIN32
+#include <win32_config.h>
+#else
+#include <xmlrpc-c/config.h>  /* Defines XMLRPC_HAVE_WCHAR */
+#endif
   /* Defines XMLRPC_HAVE_WCHAR, XMLRPC_INT64, XMLRPC_HAVE_TIMEVAL */
 
 #if XMLRPC_HAVE_WCHAR
