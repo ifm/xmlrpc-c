@@ -276,8 +276,6 @@ set(includedir "${prefix}/include")
 
 #############
 
-install(PROGRAMS xmlrpc-c-config DESTINATION ${_bin})
-
 enable_testing()
 
 #add_subdirectory(test)
