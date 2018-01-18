@@ -273,7 +273,10 @@ set(includedir "${prefix}/include")
 
 #############
 
-install(PROGRAMS xmlrpc-c-config DESTINATION ${_bin})
+if(NOT WIN32)
+  # This shell script is not useful on Windows
+  install(PROGRAMS xmlrpc-c-config DESTINATION ${_bin})
+endif
 
 enable_testing()
 
