@@ -63,7 +63,7 @@ add_library(xmlrpc SHARED
 set_target_properties(xmlrpc PROPERTIES COMPILE_FLAGS ${libxml_INCLUDES})
 
 ensc_pkgconfig(xmlrpc)
-target_link_libraries(xmlrpc ${libxml_LIBS} xmlrpc_util)
+target_link_libraries(xmlrpc PRIVATE ${libxml_LIBS} PUBLIC xmlrpc_util)
 list(APPEND lib_TARGETS xmlrpc)
 
 ### libxmlrpc_client.so
@@ -113,8 +113,11 @@ if(ENABLE_CGI_SERVER)
 endif(ENABLE_CGI_SERVER)
 
 install(TARGETS ${lib_TARGETS}
+  EXPORT xmlrpc-c-targets
   RUNTIME DESTINATION ${_bin}
-  LIBRARY DESTINATION ${_lib})
+  ARCHIVE DESTINATION ${_lib}
+  LIBRARY DESTINATION ${_lib}
+  PUBLIC_HEADER DESTINATION ${_include})
 
 set_target_properties(${lib_TARGETS}
   PROPERTIES
