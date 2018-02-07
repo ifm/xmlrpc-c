@@ -73,8 +73,11 @@ ensc_pkgconfig(xmlrpc_client++)
 
 
 install(TARGETS ${lib_TARGETS}
+  EXPORT xmlrpc-c-targets
   RUNTIME DESTINATION ${_bin}
-  LIBRARY DESTINATION ${_lib})
+  ARCHIVE DESTINATION ${_lib}
+  LIBRARY DESTINATION ${_lib}
+  PUBLIC_HEADER DESTINATION ${_include})
 
 set_target_properties(${lib_TARGETS}
   PROPERTIES

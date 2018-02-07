@@ -45,8 +45,10 @@ set_target_properties(xmlrpc_util
   SOVERSION  ${XMLRPC_C_SOVERSION})
 
 install(TARGETS xmlrpc_util
+  EXPORT xmlrpc-c-targets
   RUNTIME DESTINATION ${_bin}
   LIBRARY DESTINATION ${_lib}
-  ARCHIVE DESTINATION ${_lib})
+  ARCHIVE DESTINATION ${_lib}
+  PUBLIC_HEADER DESTINATION ${_include})
 
 ensc_pkgconfig(xmlrpc_util)

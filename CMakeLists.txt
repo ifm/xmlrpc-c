@@ -264,6 +264,7 @@ add_custom_target(dist
 
 set(_lib       lib CACHE STRING "Basename of the library-directory; usually 'lib' or 'lib64' (on multilib archs)")
 set(_bin       bin CACHE STRING "Basename of the bin-directory; usually 'bin'")
+set(_include   include CACHE STRING "Basename of the include-directory; usually 'include'")
 set(prefix     ${CMAKE_INSTALL_PREFIX})
 set(libdir     "${prefix}/${_lib}")
 set(bindir     "${prefix}/${_bin}")
@@ -293,3 +294,28 @@ add_subdirectory(src)
 if (BUILD_TOOLS)
   add_subdirectory(tools)
 endif()
+
+
+include (CMakePackageConfigHelpers)
+configure_package_config_file (cmake/xmlrpc-c-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/xmlrpc-c-config.cmake
+  INSTALL_DESTINATION ${lib}/cmake/xmlrpc-c
+  NO_CHECK_REQUIRED_COMPONENTS_MACRO)
+
+write_basic_package_version_file (xmlrpc-c-config-version.cmake 
+  VERSION ${XMLRPC_C_LIBVERSION} 
+  COMPATIBILITY SameMajorVersion)
+
+export (PACKAGE xmlrpc-c)
+export (TARGETS 
+  xmlrpc xmlrpc_client xmlrpc_server xmlrpc_xmlparse xmlrpc_util xmlrpc_xmltok xmlrpc_client++ xmlrpc++ xmlrpc_packetsocket
+  NAMESPACE xmlrpc-c:: 
+  FILE xmlrpc-c-targets.cmake)
+
+install (FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/xmlrpc-c-config.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/xmlrpc-c-config-version.cmake 
+  DESTINATION ${_lib}/cmake/xmlrpc-c)
+
+install (EXPORT xmlrpc-c-targets 
+  NAMESPACE xmlrpc-c:: 
+  DESTINATION ${_lib}/cmake/xmlrpc-c)
