@@ -31,7 +31,7 @@ else(WIN32)
         )
 endif(WIN32)
 
-add_library(xmlrpc_util SHARED
+add_library(xmlrpc_util
         ${SOURCE_FILES}
   )
 

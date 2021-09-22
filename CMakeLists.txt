@@ -75,6 +75,8 @@ if(WIN32)
     set(MUST_BUILD_CLIENT 1)
   endif(DEFINED MUST_BUILD_WININET_CLIENT)
   set(MSVCRT yes)
+else()
+   ensc_set_bool(MUST_BUILD_WININET_CLIENT 0 "Set to 0 as not needed on unix systems")
 endif(WIN32)
 
 
@@ -166,6 +168,10 @@ set(HAVE_WCHAR_H_DEFINE ${HAVE_WCHAR_H})
 
 
 #######
+#for arm64v8 platform builds
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  add_definitions("-fsigned-char")
+endif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 
 if(WIN32)
 	set(LINKER_AS_NEEDED  0 CACHE BOOL "Use the --as-needed linker option")
@@ -285,7 +291,7 @@ enable_testing()
 add_subdirectory(lib)
 
 if(ENABLE_EXAMPLES)
-	add_subdirectory(examples)
+  add_subdirectory(examples)
 endif(ENABLE_EXAMPLES)
 
 add_subdirectory(include)

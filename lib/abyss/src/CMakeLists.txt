@@ -49,7 +49,7 @@ else(WIN32)
   endif(ENABLE_ABYSS_THREADS)
 endif(WIN32)
 
-add_library(xmlrpc_abyss SHARED ${xmlrpc_abyss_SOURCES})
+add_library(xmlrpc_abyss ${xmlrpc_abyss_SOURCES})
 target_link_libraries(xmlrpc_abyss xmlrpc_util)
 
 if(ENABLE_ABYSS_THREADS)

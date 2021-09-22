@@ -51,7 +51,7 @@ add_subdirectory(cpp)
 
 
 ### libxmlrpc.so
-add_library(xmlrpc SHARED
+add_library(xmlrpc
   double.c parse_datetime.c parse_value.c resource.c trace.c version.c
   json.c
   ${xmlrpc_xml_parser}
@@ -64,17 +64,20 @@ set_target_properties(xmlrpc PROPERTIES COMPILE_FLAGS ${libxml_INCLUDES})
 
 ensc_pkgconfig(xmlrpc)
 target_link_libraries(xmlrpc PRIVATE ${libxml_LIBS} PUBLIC xmlrpc_util)
+list(APPEND lib_TARGETS ${libxml_LIBS})
+list(APPEND lib_TARGETS xmlrpc_xmltok)
+
 list(APPEND lib_TARGETS xmlrpc)
 
 ### libxmlrpc_client.so
-add_library(xmlrpc_client SHARED
+add_library(xmlrpc_client
   xmlrpc_client.c xmlrpc_client_global.c xmlrpc_server_info.c ${transport_SOURCES}
   ${xmlrpc-c_SOURCE_DIR}/include/xmlrpc-c/client.h)
 
 if(WIN32)
-    target_link_libraries(xmlrpc_client xmlrpc ${client_LIBS} wldap32)
+   target_link_libraries(xmlrpc_client xmlrpc ${client_LIBS} wldap32)
 else(WIN32)
-    target_link_libraries(xmlrpc_client xmlrpc ${client_LIBS})
+   target_link_libraries(xmlrpc_client xmlrpc ${client_LIBS})
 endif(WIN32)
 set_target_properties(xmlrpc_client
   PROPERTIES
@@ -85,7 +88,7 @@ ensc_pkgconfig(xmlrpc_client)
 set_target_properties(xmlrpc_util PROPERTIES DEFINE_SYMBOL XMLRPC_CLIENT_EXPORTED __declspec(dllexport))
 
 ### libxmlrpc_server.so
-add_library(xmlrpc_server SHARED
+add_library(xmlrpc_server
   registry.c method.c system_method.c)
 target_link_libraries(xmlrpc_server xmlrpc)
 list(APPEND lib_TARGETS xmlrpc_server)
@@ -94,7 +97,7 @@ ensc_pkgconfig(xmlrpc_server)
 
 ### libxmlrpc_server_abyss.so
 if(ENABLE_ABYSS_SERVER)
-  add_library(xmlrpc_server_abyss SHARED
+  add_library(xmlrpc_server_abyss
     xmlrpc_server_abyss.c abyss_handler.c)
   target_link_libraries(xmlrpc_server_abyss xmlrpc_abyss xmlrpc_server)
   list(APPEND lib_TARGETS xmlrpc_server_abyss)
@@ -105,7 +108,7 @@ endif(ENABLE_ABYSS_SERVER)
 
 ### libxmlrpc_server_cgi.so
 if(ENABLE_CGI_SERVER)
-  add_library(xmlrpc_server_cgi SHARED
+  add_library(xmlrpc_server_cgi
     xmlrpc_server_cgi)
   target_link_libraries(xmlrpc_server_cgi xmlrpc_server)
   list(APPEND lib_TARGETS xmlrpc_server_cgi)
