@@ -1,6 +1,6 @@
 # -*- cmake -*-
 
-####### libxmlrpc++.so
+### target xmlrpc++
 add_library(xmlrpc++
   base64.cpp
   env_wrap.cpp
@@ -21,19 +21,19 @@ endif(WIN32)
 list(APPEND lib_TARGETS xmlrpc++)
 ensc_pkgconfig(xmlrpc++)
 
-####### libxmlrpc_cpp.so
+### target xmlrpc_cpp
 add_library(xmlrpc_cpp  XmlRpcCpp.cpp)
 target_link_libraries(xmlrpc_cpp xmlrpc xmlrpc_server xmlrpc_client)
 list(APPEND lib_TARGETS xmlrpc_cpp)
 ensc_pkgconfig(xmlrpc_cpp)
 
-####### libxmlrpc_server++.so
+### target xmlrpc_server++
 add_library(xmlrpc_server++ registry.cpp)
 target_link_libraries(xmlrpc_server++ xmlrpc++ xmlrpc_server)
 list(APPEND lib_TARGETS xmlrpc_server++)
 ensc_pkgconfig(xmlrpc_server++)
 
-####### libxmlrpc_server_abyss++.so
+### target xmlrpc_server_abyss++
 if(ENABLE_ABYSS_SERVER)
   add_library(xmlrpc_server_abyss++ server_abyss.cpp)
   target_link_libraries(xmlrpc_server_abyss++ xmlrpc_server++ xmlrpc_server_abyss)
@@ -41,7 +41,7 @@ if(ENABLE_ABYSS_SERVER)
   ensc_pkgconfig(xmlrpc_server_abyss++)
 endif(ENABLE_ABYSS_SERVER)
 
-####### libxmlrpc_server_cgi++.so
+### target xmlrpc_server_cgi++
 if(ENABLE_CGI_SERVER)
   add_library(xmlrpc_server_cgi++ server_cgi.cpp)
   target_link_libraries(xmlrpc_server_cgi++ xmlrpc_server++)
@@ -49,19 +49,19 @@ if(ENABLE_CGI_SERVER)
   ensc_pkgconfig(xmlrpc_server_cgi++)
 endif(ENABLE_CGI_SERVER)
 
-####### libxmlrpc_server_pstream++.so
+### target xmlrpc_server_pstream++
 add_library(xmlrpc_server_pstream++ server_pstream.cpp server_pstream_conn.cpp)
 target_link_libraries(xmlrpc_server_pstream++ xmlrpc_server++ xmlrpc_packetsocket)
 list(APPEND lib_TARGETS xmlrpc_server_pstream++)
 ensc_pkgconfig(xmlrpc_server_pstream++)
 
-####### libxmlrpc_packetsocket.so
+### target xmlrpc_packetsocket
 add_library(xmlrpc_packetsocket packetsocket.cpp)
 target_link_libraries(xmlrpc_packetsocket xmlrpc++)
 list(APPEND lib_TARGETS xmlrpc_packetsocket)
 ensc_pkgconfig(xmlrpc_packetsocket)
 
-####### libxmlrpc_client++.so
+### target xmlrpc_client++
 add_library(xmlrpc_client++
   client.cpp client_simple.cpp curl.cpp libwww.cpp wininet.cpp pstream.cpp)
 set_target_properties(xmlrpc_client++
