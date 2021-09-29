@@ -11,7 +11,7 @@ if(COMMAND cmake_policy)
 endif()
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(XMLRPC_C_VERSION_MAJOR "1"  CACHE STRING "Version (major) of xmlrpc-c")
 set(XMLRPC_C_VERSION_MINOR "33" CACHE STRING "Version (minor) of xmlrpc-c")
